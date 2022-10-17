@@ -1,0 +1,36 @@
+type Employee{
+    id:ID!
+    name:String!
+    christianname:String
+    department:String
+    telephone:Int
+    company:Company
+}
+
+type Company{
+    id:ID!
+    name:String!
+    ceoname:String
+    contact:Int
+    location:String!
+}
+#Root type Query schema definition
+type Query{
+    findAllEmployees:[Employee]!
+    findParticularEmployee(id:Int!):Employee
+    countEmployees:Int!
+    findAllCompanies:[Company]!
+    findCompany(id:Int!):Company
+    countCompany:Int!
+}
+#Root type mutation schema definition
+type Mutation{
+    createEmployee(name:String!, christianname:String, department:String!,telephone:Int,company:ID!):Employee!
+    updateEmployee(id:ID!,name:String, christianname:String, department:String,telephone:Int):Employee!
+    deleteEmployee(id:ID!): Boolean
+    createCompany(name:String!,ceoname:String,contact:Int,location:String!):Company!
+    updateCompany(id:ID!,name:String,ceoname:String,contact:Int,location:String!):Company!
+    deleteCompany(id:ID!): Boolean
+}
+
+
