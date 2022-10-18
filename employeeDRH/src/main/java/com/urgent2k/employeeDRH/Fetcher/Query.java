@@ -9,6 +9,7 @@ import com.urgent2k.employeeDRH.Exception.EmployeeNotFoundException;
 import com.urgent2k.employeeDRH.Model.Company;
 import com.urgent2k.employeeDRH.Model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +23,13 @@ public class Query {
     CompanyRepository companyRepository;
 
     @DgsQuery
+    @Secured({"ROLE_VIEWER","ROLE_ADMIN"})
     public List<Employee> findAllEmployees(){
         return employeeRepository.findAll();
     }
 
     @DgsQuery
+    @Secured({"ROLE_VIEWER","ROLE_ADMIN"})
     public Optional<Employee> findParticularEmployee(Integer id) throws EmployeeNotFoundException{
         Optional<Employee> emp=employeeRepository.findById(id);
         if (emp.isPresent()){
@@ -37,16 +40,19 @@ public class Query {
     }
 
     @DgsQuery
+    @Secured("ROLE_ADMIN")
     public int countEmployees(){
         return (int)employeeRepository.count();
     }
 
     @DgsQuery
+    @Secured({"ROLE_VIEWER","ROLE_ADMIN"})
     public List<Company> findAllCompanies(){
         return companyRepository.findAll();
     }
 
     @DgsQuery
+    @Secured("ROLE_ADMIN")
     public Optional<Company> findCompany(Integer id) throws  CompanyNotFoundException{
         Optional<Company> cmp=companyRepository.findById(id);
         if (cmp.isPresent()){
@@ -56,6 +62,7 @@ public class Query {
     }
 
     @DgsQuery
+    @Secured({"ROLE_VIEWER","ROLE_ADMIN"})
     public int countCompany(){
         return (int)companyRepository.count();
     }

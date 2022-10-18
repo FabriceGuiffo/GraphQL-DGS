@@ -1,6 +1,8 @@
 package com.urgent2k.employeeDRH.Exception;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.netflix.graphql.types.errors.TypedGraphQLError;
+import com.urgent2k.employeeDRH.Security.JwtProperties;
 import graphql.GraphQLError;
 import graphql.execution.DataFetcherExceptionHandler;
 import graphql.execution.DataFetcherExceptionHandlerParameters;
@@ -35,6 +37,22 @@ public class CustomDataFetchingExceptionHandler implements DataFetcherExceptionH
             debugInfo.put("What went wrong","check the Fetcher.Query.findCompany");
 
             GraphQLError graphQLError= TypedGraphQLError.newNotFoundBuilder()
+                    .message(handlerParameters.getException().getMessage())
+                    .debugInfo(debugInfo)
+                    .path(handlerParameters.getPath())
+                    .build();
+
+            DataFetcherExceptionHandlerResult result=DataFetcherExceptionHandlerResult.newResult()
+                    .error(graphQLError)
+                    .build();
+            return CompletableFuture.completedFuture(result);
+
+        }
+        else if(handlerParameters.getException() instanceof TokenExpiredException){
+            Map<String,Object> debugInfo= new HashMap<>();
+            debugInfo.put("What went wrong","Your token expired it is valid only "+ JwtProperties.EXPIRATION_TIME+"millis");
+
+            GraphQLError graphQLError= TypedGraphQLError.newPermissionDeniedBuilder()
                     .message(handlerParameters.getException().getMessage())
                     .debugInfo(debugInfo)
                     .path(handlerParameters.getPath())

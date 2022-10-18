@@ -10,6 +10,7 @@ import com.urgent2k.employeeDRH.Exception.EmployeeNotFoundException;
 import com.urgent2k.employeeDRH.Model.Company;
 import com.urgent2k.employeeDRH.Model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class Mutation {
     EmployeeRepository employeeRepository;
 
     @DgsMutation
+    @Secured("ROLE_ADMIN")
     public Employee createEmployee(@InputArgument String name, @InputArgument String christianname, @InputArgument String department, @InputArgument int telephone, @InputArgument Integer company_id) throws CompanyNotFoundException{
         Employee employee=new Employee();
         employee.setName(name);
@@ -44,6 +46,7 @@ public class Mutation {
     }
 
     @DgsMutation
+    @Secured("ROLE_ADMIN")
     public Employee updateEmployee(@InputArgument Integer id, @InputArgument String name, @InputArgument String christianname, @InputArgument String department, @InputArgument int telephone) throws EmployeeNotFoundException {
         //we start by retrieving the corresponding elem in the BDD
         Optional<Employee> employeeOptional=employeeRepository.findById(id);
@@ -68,12 +71,14 @@ public class Mutation {
     }
 
     @DgsMutation
+    @Secured("ROLE_ADMIN")
     public Boolean deleteEmployee(@InputArgument Integer id){
         employeeRepository.deleteById(id);
         return true;
     }
 
     @DgsMutation
+    @Secured({"ROLE_VIEWER","ROLE_ADMIN"})
     public Company createCompany(@InputArgument String name, @InputArgument String ceoname, @InputArgument int contact, @InputArgument String location){
         Company company= new Company();
         company.setName(name);
@@ -85,6 +90,7 @@ public class Mutation {
     }
 
     @DgsMutation
+    @Secured("ROLE_ADMIN")
     public Company updateCompany(@InputArgument Integer id, @InputArgument String name, @InputArgument String ceoname, @InputArgument int contact, @InputArgument String location){
         Optional<Company> fcompany=companyRepository.findById(id);
 
@@ -110,6 +116,7 @@ public class Mutation {
     }
 
     @DgsMutation
+    @Secured("ROLE_ADMIN")
     public Boolean deleteCompany(@InputArgument Integer id){
         companyRepository.deleteById(id);
         return true;
